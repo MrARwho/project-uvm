@@ -1,0 +1,83 @@
+Based on the provided design specification for the ALU module, here is a detailed analysis of its functional points.
+
+### General Functionality
+1.  **Module Interface:** The module shall have three 32-bit input ports (`a_operand`, `b_operand`), one 4-bit input port (`Operation`), one 32-bit output port (`ALU_Output`), and three 1-bit output flags (`Exception`, `Overflow`, `Underflow`).
+2.  **Combinational Logic:** The module shall operate as a purely combinational block. Any change on the input ports (`a_operand`, `b_operand`, `Operation`) shall be reflected on the output ports after a propagation delay, without the need for a clock signal.
+3.  **Reset Behavior:** The module has no reset input. Its state is determined solely by its current inputs.
+4.  **Default/Invalid Operation:** When the `Operation` input is set to an unused code (e.g., `4'd0`, `4'd12` - `4'd15`), the behavior of the outputs (`ALU_Output`, `Exception`, `Overflow`, `Underflow`) should be verified. The specification does not define this behavior. It may default to a known state (e.g., pass-through, all zeros) or assert an exception.
+5.  **Exception on Invalid Inputs:** For any arithmetic operation, if either `a_operand` or `b_operand` has an exponent of all 1s (representing Infinity or NaN), the `Exception` output shall be asserted (`1'b1`).
+
+### Arithmetic Operations
+#### Addition (`Operation` = 4'd10)
+6.  **Normal Addition:** Verify the addition of two positive, normalized floating-point numbers that do not result in overflow.
+7.  **Addition with Different Signs:** Verify the addition of a positive and a negative normalized floating-point number. This internally becomes a subtraction.
+8.  **Zero Addition:** Verify that adding `a_operand` to positive or negative zero (`b_operand`) results in `a_operand`.
+9.  **Infinity Addition:**
+    *   Verify that adding a finite number to +Infinity results in +Infinity.
+    *   Verify that adding +Infinity to +Infinity results in +Infinity.
+    *   Verify that adding +Infinity to -Infinity results in a NaN (Not a Number) and asserts the `Exception` flag.
+10. **NaN Addition:** Verify that adding any number (including Zero, Infinity, or another NaN) to a NaN results in a NaN.
+11. **Addition Overflow:** Verify that adding two large positive numbers, where the result exceeds the maximum representable value, asserts the `Overflow` flag (`1'b1`) and sets `ALU_Output` to +Infinity.
+12. **Addition Underflow:** Verify that adding two numbers with opposite signs, where the result is a very small non-zero number that requires a subnormal representation, asserts the `Underflow` flag (`1'b1`).
+
+#### Subtraction (`Operation` = 4'd3)
+13. **Normal Subtraction:** Verify the subtraction of two positive, normalized floating-point numbers.
+14. **Subtraction Resulting in Negative:** Verify that subtracting a larger number from a smaller number produces the correct negative result.
+15. **Zero Subtraction:**
+    *   Verify that subtracting zero from `a_operand` results in `a_operand`.
+    *   Verify that subtracting `a_operand` from zero results in the sign-flipped `a_operand`.
+16. **Infinity Subtraction:**
+    *   Verify that subtracting a finite number from +Infinity results in +Infinity.
+    *   Verify that subtracting +Infinity from a finite number results in -Infinity.
+    *   Verify that subtracting +Infinity from +Infinity results in a NaN and asserts the `Exception` flag.
+17. **NaN Subtraction:** Verify that subtracting any number from a NaN, or subtracting a NaN from any number, results in a NaN.
+18. **Subtraction Overflow/Underflow:** Verify overflow and underflow conditions, similar to addition, by using operands that cause the result to exceed the representable range (e.g., `large_positive - large_negative`).
+
+#### Multiplication (`Operation` = 4'd1)
+19. **Normal Multiplication:** Verify the multiplication of two normalized floating-point numbers.
+20. **Multiplication by Zero:** Verify that multiplying any finite number by zero results in zero. The sign of the result should be the XOR of the operands' signs.
+21. **Multiplication by One:** Verify that multiplying `a_operand` by 1.0 results in `a_operand`.
+22. **Infinity Multiplication:**
+    *   Verify that multiplying Infinity by any non-zero finite number results in a correctly signed Infinity.
+    *   Verify that multiplying Infinity by zero results in a NaN and asserts the `Exception` flag.
+23. **NaN Multiplication:** Verify that multiplying any number by a NaN results in a NaN.
+24. **Multiplication Overflow:** Verify that multiplying two large numbers, where the resulting exponent is too large, asserts the `Overflow` flag (`1'b1`) and sets `ALU_Output` to a correctly signed Infinity.
+25. **Multiplication Underflow:** Verify that multiplying two very small numbers, where the resulting exponent is too small, asserts the `Underflow` flag (`1'b1`). The result may be a subnormal number or zero.
+
+#### Division (`Operation` = 4'd2)
+26. **Normal Division:** Verify the division of two normalized floating-point numbers.
+27. **Division by One:** Verify that dividing `a_operand` by 1.0 results in `a_operand`.
+28. **Division by Zero:** Verify that dividing any non-zero finite number by zero asserts the `Exception` flag (`1'b1`) and results in a correctly signed Infinity.
+29. **Zero divided by Zero:** Verify that dividing zero by zero asserts the `Exception` flag (`1'b1`) and results in a NaN.
+30. **Infinity Division:**
+    *   Verify that dividing a finite number by Infinity results in a correctly signed zero.
+    *   Verify that dividing Infinity by a finite number results in a correctly signed Infinity.
+    *   Verify that dividing Infinity by Infinity results in a NaN and asserts the `Exception` flag.
+31. **NaN Division:** Verify that any division operation involving a NaN operand results in a NaN.
+32. **Division Overflow/Underflow:** Verify overflow (e.g., dividing a large number by a very small number) and underflow (e.g., dividing a small number by a large number) conditions and the corresponding flag assertions.
+
+### Logical and Shift Operations
+33. **OR (`Operation` = 4'd4):** Verify that `ALU_Output` is the bitwise OR of `a_operand` and `b_operand`. The `Exception`, `Overflow`, and `Underflow` flags should be de-asserted (`1'b0`).
+34. **AND (`Operation` = 4'd5):** Verify that `ALU_Output` is the bitwise AND of `a_operand` and `b_operand`. The flags should be de-asserted.
+35. **XOR (`Operation` = 4'd6):** Verify that `ALU_Output` is the bitwise XOR of `a_operand` and `b_operand`. The flags should be de-asserted.
+36. **Left Shift (`Operation` = 4'd7):**
+    *   Verify that `ALU_Output` is `a_operand` logically shifted left by the amount specified in `b_operand`.
+    *   The specification is unclear on how the 32-bit `b_operand` is interpreted as a shift amount. Verification should test using the lower 5 bits of `b_operand` (for a shift amount of 0-31).
+    *   Verify behavior for a shift amount of 0, 1, 31, and >= 32.
+    *   The flags should be de-asserted.
+37. **Right Shift (`Operation` = 4'd8):**
+    *   Verify that `ALU_Output` is `a_operand` logically shifted right by the amount specified in `b_operand`.
+    *   Verify using the lower 5 bits of `b_operand` as the shift amount.
+    *   Verify behavior for a shift amount of 0, 1, 31, and >= 32.
+    *   The flags should be de-asserted.
+38. **Complement (`Operation` = 4'd11):** Verify that `ALU_Output` is the bitwise NOT of `a_operand`. The `b_operand` input should be ignored. The flags should be de-asserted.
+
+### Conversion Operation
+39. **Floating-Point to Integer (`Operation` = 4'd9):**
+    *   This operation likely uses only `a_operand`. The `b_operand` input should be ignored.
+    *   Verify conversion of a positive floating-point number with no fractional part (e.g., 123.0) to its correct integer representation.
+    *   Verify conversion of a negative floating-point number (e.g., -50.0).
+    *   Verify conversion of a floating-point number with a fractional part (e.g., 123.75). The rounding/truncation behavior must be checked (e.g., does it round to nearest or truncate towards zero?).
+    *   Verify conversion of a floating-point number that is too large to fit in a 32-bit integer. This should assert the `Overflow` flag.
+    *   Verify conversion of Zero, which should result in an integer 0.
+    *   Verify conversion of Infinity and NaN, which should assert the `Exception` flag.

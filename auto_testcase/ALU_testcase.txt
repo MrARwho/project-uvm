@@ -1,0 +1,118 @@
+# Module: ALU
+## Test Point ID: ALU_FUNC_001
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'h3FC00000     | Functional: Normal Addition (1.5 + 2.5) |
+|                | b_operand[31:0] = 32'h40200000     |                         |
+|                | Operation[3:0] = 4'd10             |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_002
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'h41200000     | Functional: Addition with different signs (10.0 + (-3.0)) |
+|                | b_operand[31:0] = 32'hC0400000     |                         |
+|                | Operation[3:0] = 4'd10             |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_003
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'h40A00000     | Functional: Normal Subtraction (5.0 - 2.0) |
+|                | b_operand[31:0] = 32'h40000000     |                         |
+|                | Operation[3:0] = 4'd3              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_004
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'h40000000     | Functional: Subtraction resulting in negative (2.0 - 5.0) |
+|                | b_operand[31:0] = 32'h40A00000     |                         |
+|                | Operation[3:0] = 4'd3              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_005
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'h40400000     | Functional: Normal Multiplication (3.0 * 4.0) |
+|                | b_operand[31:0] = 32'h40800000     |                         |
+|                | Operation[3:0] = 4'd1              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_006
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'h41200000     | Functional: Normal Division (10.0 / 2.0) |
+|                | b_operand[31:0] = 32'h40000000     |                         |
+|                | Operation[3:0] = 4'd2              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_007
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'hAAAAAAAA     | Functional: Bitwise OR |
+|                | b_operand[31:0] = 32'h55555555     |                         |
+|                | Operation[3:0] = 4'd4              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_008
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'hFF00FF00     | Functional: Bitwise AND |
+|                | b_operand[31:0] = 32'h00FFFF00     |                         |
+|                | Operation[3:0] = 4'd5              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_009
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'hDEADBEEF     | Functional: Bitwise XOR |
+|                | b_operand[31:0] = 32'hCAFEBABE     |                         |
+|                | Operation[3:0] = 4'd6              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_010
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'h12345678     | Functional: Left Shift by 5 |
+|                | b_operand[31:0] = 32'h00000005     |                         |
+|                | Operation[3:0] = 4'd7              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_011
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'hFEDCBA98     | Functional: Right Shift by 8 |
+|                | b_operand[31:0] = 32'h00000008     |                         |
+|                | Operation[3:0] = 4'd8              |                         |
+# Module: ALU
+## Test Point ID: ALU_FUNC_012
+### Test Type
+Functional
+
+| Item          | Auto-Generated Value              | Reference               |
+|---------------|-----------------------------------|-------------------------|
+|  Config        | a_operand[31:0] = 32'hF0F0F0F0     | Functional
